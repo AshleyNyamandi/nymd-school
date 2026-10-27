@@ -1,0 +1,16 @@
+@import "tailwindcss";
+
+
+@theme {
+
+}
+@layer base {
+  html {
+    @apply text-gray-700;
+  }
+  button {
+    cursor: pointer;
+  }
+
+  
+}
