@@ -9,6 +9,7 @@ import {
     generateAccessToken, 
     generateEmailVerificationToken, 
     generateRefreshToken, 
+    sendPasswordResetEmail,
     sendVerificationEmail, 
     validateEmail } from "../lib/utils.js";
 import { BCRYPT_SALT, CLIENT_URL, JWT_SECRET, NODE_ENV } from "../config/env.js";
@@ -345,7 +346,7 @@ export const ForgotPassword = async(req, res, next) => {
         user.resetPasswordExpiresAt = emailVerificationTokenExpiresAt;
         await user.save();
 
-        const resetUrl = `${process.env.CLIENT_URL}/reset-password?token=${emailVerificationToken}`;
+        const resetUrl = `${CLIENT_URL}/reset-password?token=${emailVerificationToken}`;
 
         await sendPasswordResetEmail(user.email, resetUrl);
 
@@ -376,7 +377,7 @@ export const ResetPassword = async(req, res, next) => {
             throw error;
         }
 
-        if (newPassword.trim() !== confirmPassword.trim()) {
+        if (newPassword !== confirmPassword) {
             const error = new Error("Passwords do not match");
             error.statusCode = 400;
             throw error;
@@ -395,7 +396,7 @@ export const ResetPassword = async(req, res, next) => {
             throw error;
         }
 
-        const hashedPassword = await bcrypt.hash(newPassword, BCRYPT_SALT);
+        const hashedPassword = await bcrypt.hash(newPassword, parseInt(BCRYPT_SALT, 10));
 
         user.password = hashedPassword;
         user.resetPasswordToken = undefined;

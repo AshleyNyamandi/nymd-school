@@ -11,14 +11,14 @@ export const uploadMaterial = async (req, res, next) => {
 
         // unique file path for Supabase bucket to avoid overwriting files
         const fileExtension = req.file.originalname.split(".").pop();
-        const fileName = type === "marking-scheme" || "past-paper" ? (
+        const fileName = type === "marking-scheme" || type === "past-paper" ? (
             `${level}_${subject}_${year}_${session}_${paper}_${type}_${Math.random().toString(36).substring(2, 7)}.${fileExtension}`
         ) : `${level}_${subject}_${topic}_${Math.random().toString(36).substring(2, 7)}.${fileExtension}`
 
         const filePath = `${level}/${subject}/${fileName}`;
 
         // Upload the raw buffer to Supabase Storage
-        const { data: uploadData, error: uploadError } = await supabase.storage
+        const { error: uploadError } = await supabase.storage
             .from("online-school-documents")
             .upload(filePath, req.file.buffer, {
                 contentType: req.file.mimetype,
@@ -44,7 +44,6 @@ export const uploadMaterial = async (req, res, next) => {
             subject,
             materialType: type,
             year,
-            year,
             topic,
             paper,
             session,
@@ -65,9 +64,10 @@ export const uploadMaterial = async (req, res, next) => {
 export const getSubjectMaterials = async (req, res, next) => {
   try { 
     const { level, subject, year } = req.params
+    const escapedSubject = subject.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     const data = await Material.find({
       level,  
-      subject: new RegExp(`^${subject}$`, 'i'),
+      subject: new RegExp(`^${escapedSubject}$`, 'i'),
       year
     })
   
@@ -76,6 +76,6 @@ export const getSubjectMaterials = async (req, res, next) => {
     })
   } catch (error) {
     console.log("Error in the getSubjectMaterials controller: ", error.message)
-    next()
+    next(error)
   }
 }

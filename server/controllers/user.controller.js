@@ -58,7 +58,7 @@ export const getAllUsers = async (req, res, next) => {
         }
     });
   } catch (error) {
-    console.error("getAllUsers error:", err);
+    console.error("getAllUsers error:", error);
     next(error)
   }
 };

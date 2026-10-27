@@ -13,7 +13,7 @@ authRouter.post("/resend-verification", ResendVerificationEmail);
 authRouter.post("/verify-email", VerifyEmail);
 authRouter.post("/refresh-token", RefreshToken);
 authRouter.patch("/reset-password", ResetPassword); 
-authRouter.delete("/delete-account", DeleteAccount);  
+authRouter.delete("/delete-account", authenticated, DeleteAccount);
 authRouter.get("/users/me", authenticated, GetMe);
 
 export default authRouter;

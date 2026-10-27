@@ -61,6 +61,31 @@ export const sendVerificationEmail = async(toEmail, verificationUrl) => {
     await transporter.sendMail(mailOptions)
 }
 
+export const sendPasswordResetEmail = async (toEmail, resetUrl) => {
+    const transporter = nodemailer.createTransport({
+        service: "gmail",
+        port: 587,
+        host: "smtp.gmail.com",
+        secure: false,
+        auth: {
+            user: EMAIL,
+            pass: EMAIL_PASSWORD
+        }
+    });
+
+    await transporter.sendMail({
+        from: "Nymd Team",
+        to: toEmail,
+        subject: "Reset your password",
+        html: `
+            <h2>Password reset</h2>
+            <p>Click the link below to choose a new password.</p>
+            <a href="${resetUrl}">Reset password</a>
+            <p>If you didn't request a password reset, you can safely ignore this email.</p>
+        `
+    });
+};
+
 export const createAccessToken = (user) => {
     return jwt.sign({userId: user._id, email: user.email}, JWT_SECRET, {
         expiresIn: "15m"
