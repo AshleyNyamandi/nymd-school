@@ -1,7 +1,9 @@
 import { Link } from "react-router";
 import NoMaterialPage from "./NoMaterialPage";
 
-const MaterialCard = ({data}) => {
+import type { Material } from "..";
+
+const MaterialCard = ({data}: {data: Material[]}) => {
   return (
     <>
             {data.length > 0 ? (

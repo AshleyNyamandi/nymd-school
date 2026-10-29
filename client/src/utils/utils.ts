@@ -2,6 +2,7 @@ import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import type { Variants } from "framer-motion";
 import { aLevelSubjectsData, oLevelSubjectsData, subjectColors } from "../constants.ts";
+import type { Variants } from "motion/react";
 import api from "../services/api.tsx";
 
 export function cn(...inputs: ClassValue[]) {

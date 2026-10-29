@@ -107,7 +107,7 @@ const AdminLayout = () => {
             <div className="flex items-center gap-4 ml-auto">
               <div className="h-8 w-8 rounded-full bg-indigo-600 flex items-center justify-center">
                 <span className="text-white text-sm font-medium">
-                  {email?.length > 0 ? email[0].toUpperCase() : "N/A"}
+                  {email && email.length > 0 ? email[0].toUpperCase() : "N/A"}
                 </span>
               </div>
             </div>

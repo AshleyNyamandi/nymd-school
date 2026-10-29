@@ -1,10 +1,12 @@
 import { useMutation } from "@tanstack/react-query"
 import { X } from "lucide-react"
-import { useState } from "react"
+import { useState, type ChangeEvent, type SyntheticEvent } from "react"
 import toast, { Toaster } from "react-hot-toast"
 import api from "../services/api"
 
-const ReplyTutorRequest = ({isOpen, setIsOpen, currentRequest}) => {
+import type { TutorRequest } from "..";
+
+const ReplyTutorRequest = ({isOpen, setIsOpen, currentRequest}: { isOpen: boolean; setIsOpen: (open: boolean) => void; currentRequest: TutorRequest }) => {
 
     const [formData, setFormData] = useState({
         message: localStorage.getItem(currentRequest.email) || ""
@@ -15,7 +17,7 @@ const ReplyTutorRequest = ({isOpen, setIsOpen, currentRequest}) => {
         setIsOpen(false)
     };
 
-    const handleInputChange = (e) => {
+    const handleInputChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
         const { name, value} = e.target;
         setFormData(prev => ({
             ...prev,
@@ -24,11 +26,11 @@ const ReplyTutorRequest = ({isOpen, setIsOpen, currentRequest}) => {
     };
 
     const mutation = useMutation({
-        mutationFn: (data: {message: string, _id: string, email:string}) => {
-            const response = api.post("/tutor-support/reply-tutor-requests", data)
+        mutationFn: async (data: {message: string, _id: string, email:string}) => {
+            const response = await api.post("/tutor-support/reply-tutor-requests", data)
             return response.data
         },
-        onError: (error) => {
+        onError: () => {
             toast.error("Error sending message")
         },
         onSuccess: () => {
@@ -38,7 +40,7 @@ const ReplyTutorRequest = ({isOpen, setIsOpen, currentRequest}) => {
         }
     })
 
-    const handleSubmit = (e) => {
+    const handleSubmit = (e: SyntheticEvent<HTMLFormElement>) => {
         e.preventDefault();
         mutation.mutate({
                 message: formData.message, 

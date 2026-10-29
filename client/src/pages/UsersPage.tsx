@@ -1,6 +1,6 @@
 // components/AdminDashboard.jsx
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
-import { useState } from "react";
+import { useState, type ChangeEvent } from "react";
 import {
   Users,
   ShieldCheck,
@@ -12,6 +12,8 @@ import api from "../services/api";
 import { FilterPill, Pagination, StatCard, UserCard } from "../components/Cards";
 
 
+import type { User } from "..";
+
 const UsersManagement = () => {
   const [page, setPage] = useState(1);
   const [status, setStatus] = useState("all"); // all | verified | unverified
@@ -21,17 +23,14 @@ const UsersManagement = () => {
 
   const {
     data,
-    isLoading,
     isFetching,
-    isError,
-    error,
   } = useQuery({
     queryKey: ["users", { page, limit, status, role, search }],
     queryFn: async () => {
-      const response = await api.get("/users", {
+      const response = await api.get<{ data: { users: User[]; total: number; pages: number } }>("/users", {
         params: { page, limit, status, role, search }
       })
-      return response.data.data || []
+      return response.data.data
     },
     placeholderData: keepPreviousData,
   });
@@ -40,15 +39,15 @@ const UsersManagement = () => {
   const total = data?.total ?? 0;
   const pages = data?.pages ?? 1;
 
-  const handleStatusChange = (val) => {
+  const handleStatusChange = (val: string) => {
     setStatus(val);
     setPage(1);
   };
-  const handleRoleChange = (val) => {
+  const handleRoleChange = (val: string) => {
     setRole(val);
     setPage(1);
   };
-  const handleSearchChange = (e) => {
+  const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
     setPage(1);
   };

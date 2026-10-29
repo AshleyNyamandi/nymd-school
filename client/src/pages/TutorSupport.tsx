@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useState, type SyntheticEvent } from "react"
 import type { TutorSupportEntries, TutorSupportErrors } from "..";
 import { cn, validateEmail } from "../utils/utils";
@@ -32,15 +33,15 @@ const TutorSupport = () => {
         message: ""        
       })
     },
-    onError: (error: any) => {
-      if (error.response) {
+    onError: (error) => {
+      if (axios.isAxiosError<{ message?: string }>(error) && error.response) {
         const message = error.response.data?.message;
 
           setErrors({
             general: message || "An error occurred. Please try again.",
           });
 
-      } else if (error.request) {
+      } else if (axios.isAxiosError(error) && error.request) {
         setErrors({
           general: "Network error. Please check your connection.",
         });

@@ -1,8 +1,9 @@
+import axios from "axios";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import { Check } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router";
+import { useNavigate } from "react-router";
 import LoadingPage from "../components/Loading";
 import api from "../services/api";
 
@@ -22,7 +23,7 @@ export default function EmailVerified() {
 
     },
     onError : (error) => {
-      setMessage(error.response.data.message)
+      setMessage(axios.isAxiosError<{ message?: string }>(error) ? error.response?.data?.message || "Email verification failed" : error.message)
     },
     onSuccess: (data) => {
       setMessage(data.message);
