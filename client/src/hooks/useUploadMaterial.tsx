@@ -29,7 +29,7 @@ const useUploadMaterial = () => {
 
   // Validate form
   const validateForm = () => {
-    const newErrors = {};
+    const newErrors: ErrorsType = {};
 
     if (!formData.level) {
       newErrors.level = "Please select a level";
