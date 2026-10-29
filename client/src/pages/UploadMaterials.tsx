@@ -17,6 +17,20 @@ import { years, requiresPaper, requiresTopic, requiresYear, cn, requiresSession 
 import useUploadMaterial from "../hooks/useUploadMaterial";
 
 
+export interface UploadFormData {
+  level: string;
+  subject: string;
+  type: string;
+  year: string;
+  paper: string;
+  topic: string;
+  session: string;
+}
+
+export type UploadFormErrors = Partial<Record<keyof UploadFormData | "file", string>>;
+
+
+
 const UploadMaterials = () => {
   const {
       formData,

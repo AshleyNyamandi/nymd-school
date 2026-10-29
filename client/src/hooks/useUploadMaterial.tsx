@@ -6,20 +6,21 @@ import toast from "react-hot-toast";
 import { requiresPaper, requiresSession, requiresTopic, requiresYear } from "../utils/utils";
 import api from "../services/api";
 import { aLevelSubjectsData, oLevelSubjectsData } from "../constants";
+import type { UploadFormData } from "../pages/UploadMaterials";
 
 
 
 const useUploadMaterial = () => {
    const fileInputRef = useRef<HTMLInputElement>(null);
-  const [formData, setFormData] = useState({
-    level: "",
-    subject: "",
-    type: "",
-    year: "",
-    topic: "",
-    paper: "",
-    session: ""
-  });
+    const [formData, setFormData] = useState<UploadFormData>({
+      level: "",
+      subject: "",
+      type: "",
+      year: "",
+      paper: "",
+      topic: "",
+      session: "",
+    });
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   type ErrorsType = Partial<Record<keyof typeof formData | "file" | "general", string>>;
   const [errors, setErrors] = useState<ErrorsType>({});
@@ -28,7 +29,7 @@ const useUploadMaterial = () => {
 
   // Validate form
   const validateForm = () => {
-    const newErrors: ErrorsType = {};
+    const newErrors = {};
 
     if (!formData.level) {
       newErrors.level = "Please select a level";
