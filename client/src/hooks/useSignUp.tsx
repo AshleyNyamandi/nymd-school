@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useMutation } from "@tanstack/react-query";
 import { useState, type SyntheticEvent } from "react"
 import { useNavigate } from "react-router";
@@ -9,7 +10,7 @@ const useSignUp = () => {
     const navigate = useNavigate()
 
     const [showPassword, setShowPassword] = useState(false);
-    const [errors, setErrors] = useState<{fullName: string, email:string, password:string, confirmPassword:string}>({
+    const [errors, setErrors] = useState<{fullName?: string, email?:string, password?:string, confirmPassword?:string}>({
         fullName: "",
         email: "",
         password: "",
@@ -38,9 +39,9 @@ const useSignUp = () => {
             navigate("/check-email", {state: {email: formData.email}})
         },
         onError: (error) => {
-            if (error.response) {
-                toast.error(error.response?.data?.message)
-            } else if (error.request) {
+            if (axios.isAxiosError<{ message?: string }>(error) && error.response) {
+                toast.error(error.response?.data?.message || "Error Signing up")
+            } else if (axios.isAxiosError(error) && error.request) {
                 toast.error("Server error");
             } else {
                 toast.error("Error Signing up")
@@ -57,7 +58,7 @@ const useSignUp = () => {
             ...prev, 
             [name]: value
         }))
-        if (errors[name]) {
+        if (errors[name as keyof typeof errors]) {
             setErrors(prev => ({
                 ...prev,
                 [name]: ""

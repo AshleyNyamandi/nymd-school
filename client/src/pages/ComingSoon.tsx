@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import {  Mail, ArrowRight, Sparkles } from 'lucide-react';
+import {  Mail, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router';
 
 const ComingSoonPage = () => {
@@ -31,7 +31,7 @@ const ComingSoonPage = () => {
     return () => clearInterval(timer);
   }, [launchDate]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (email) {
       setIsSubmitted(true);

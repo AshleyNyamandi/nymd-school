@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router";
 
-const FolderCard = ({ link, label= null, index }) => {
+const FolderCard = ({ link, label= null, index }: { link: string; label?: string | null; index?: number }) => {
       const navigate = useNavigate();
 
   return (

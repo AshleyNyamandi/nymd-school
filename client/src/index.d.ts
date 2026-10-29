@@ -25,3 +25,34 @@ export interface TutorSupportErrors {
     message?: string
     general?: string
   }  
+
+export interface User {
+  _id: string;
+  fullName: string;
+  email: string;
+  role: "admin" | "teacher" | "student";
+  isVerified: boolean;
+  bio?: string;
+  createdAt: string;
+}
+
+export interface TutorRequest {
+  _id: string;
+  subject: string;
+  level: string;
+  email: string;
+  message: string;
+  isReplied: boolean;
+  createdAt: string;
+}
+
+export interface Material {
+  _id: string;
+  level: string;
+  subject: string;
+  materialType: string;
+  paper?: string;
+  year?: number;
+  session?: string;
+  fileUrl?: string;
+}

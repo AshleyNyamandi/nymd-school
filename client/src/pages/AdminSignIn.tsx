@@ -24,7 +24,7 @@ const AdminSignIn = () => {
   return (
     <>
         {
-            email && userId && ["teacher", "admin"].includes(role) ? (
+            email && userId && role && ["teacher", "admin"].includes(role) ? (
                 <Navigate to="/admin/dashboard" replace/>
             ) :
             (

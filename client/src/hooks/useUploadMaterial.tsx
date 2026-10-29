@@ -1,4 +1,5 @@
-import { useState, useEffect, useRef, type SyntheticEvent } from "react";
+import axios from "axios";
+import { useState, useRef, type SyntheticEvent } from "react";
 import { useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 
@@ -20,19 +21,8 @@ const useUploadMaterial = () => {
     session: ""
   });
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [errors, setErrors] = useState({}); 
-
-  // Reset subject when level changes
-  useEffect(() => {
-    if (formData.subject) {
-      setFormData(prev => ({ ...prev, subject: "" }));
-    }
-  }, [formData.level]);  
-
-  const subjects = {
-    "o-level": ["Maths", "Physics", "Chemistry", "Computer Science"], 
-    "a-level": ["Maths", "Physics", "Chemistry", "Computer Science", "Statistics"]
-  }
+  type ErrorsType = Partial<Record<keyof typeof formData | "file" | "general", string>>;
+  const [errors, setErrors] = useState<ErrorsType>({});
 
   const subjectsData = formData.level === "o-level" ? oLevelSubjectsData : aLevelSubjectsData
 
@@ -113,6 +103,7 @@ const useUploadMaterial = () => {
     setFormData((prev) => ({
       ...prev,
       [name]: value,
+      ...(name === "level" ? { subject: "" } : {}),
     }));
 
     // Clear field error when user makes a selection
@@ -181,7 +172,7 @@ const useUploadMaterial = () => {
             toast.success("Uploaded successfully", {
               duration: 4000,
               position: "top-center"
-            }),
+            });
       // Reset form
       setFormData({
         level: "",
@@ -197,15 +188,15 @@ const useUploadMaterial = () => {
         fileInputRef.current.value = "";
       }
     },
-    onError: (error: any) => {
-    let errorMessage = "";
+    onError: (error) => {
+    let errorMessage: string;
     
-    if (error.response) {
+    if (axios.isAxiosError<{ message?: string }>(error) && error.response) {
         errorMessage = error.response.data?.message || "Upload failed. Please try again.";
         setErrors({
         general: errorMessage,
         });
-    } else if (error.request) {
+    } else if (axios.isAxiosError(error) && error.request) {
         errorMessage = "Network error. Please check your connection.";
         setErrors({
         general: errorMessage,

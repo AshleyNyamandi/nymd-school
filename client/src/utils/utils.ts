@@ -1,6 +1,7 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { aLevelSubjectsData, oLevelSubjectsData, subjectColors } from "../constants.ts";
+import type { Variants } from "motion/react";
 import api from "../services/api.tsx";
 
 export function cn(...inputs: ClassValue[]) {
@@ -65,7 +66,7 @@ export const containerVariants = {
   },
 };
 
-export const itemVariants = {
+export const itemVariants: Variants = {
   hidden: { opacity: 0, scale: 0.9 },
   visible: {
     opacity: 1,
@@ -96,6 +97,6 @@ export const fetchStats = async () => {
     return response.data.data || []
     
   } catch (error) {
-    console.log(error.message)
+    console.log(error instanceof Error ? error.message : error)
   }
 }

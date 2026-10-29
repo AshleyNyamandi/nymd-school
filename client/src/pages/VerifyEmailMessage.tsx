@@ -21,8 +21,8 @@ const VerifyEmailMessage = () => {
       await axios.post("/auth/resend-verification", { email });
       
       setResendStatus("A new verification link has been sent to your email.");
-    } catch (error: any) {
-      setResendStatus(error.response?.data?.message || "Failed to resend verification email.");
+    } catch (error) {
+      setResendStatus((axios.isAxiosError<{ message?: string }>(error) && error.response?.data?.message) || "Failed to resend verification email.");
     } finally {
       setIsResending(false);
     }

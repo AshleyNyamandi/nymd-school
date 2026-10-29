@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState, type SyntheticEvent } from "react"
 import { useNavigate } from "react-router";
@@ -32,10 +33,10 @@ const useSignIn = () => {
 
         },
         onError: (error) => {
-            if (error.response) {
-                toast.error(error.response.data.message);
+            if (axios.isAxiosError<{ message?: string }>(error) && error.response) {
+                toast.error(error.response.data.message || "Request failed");
                 console.log(error.response.data.message);
-            } else if (error.request) {
+            } else if (axios.isAxiosError(error) && error.request) {
                 toast.error("Server error");
             }
             
@@ -55,10 +56,10 @@ const useSignIn = () => {
 
         },
         onError: (error) => {
-            if (error.response) {
-                toast.error(error.response.data.message);
+            if (axios.isAxiosError<{ message?: string }>(error) && error.response) {
+                toast.error(error.response.data.message || "Request failed");
                 console.log(error.response.data.message);
-            } else if (error.request) {
+            } else if (axios.isAxiosError(error) && error.request) {
                 toast.error("Server error");
             }
             
@@ -71,7 +72,7 @@ const useSignIn = () => {
             ...prev, 
             [name]: value
         }))
-        if (errors[name]) {
+        if (errors[name as keyof typeof errors]) {
             setErrors(prev => ({
                 ...prev,
                 [name]: ""

@@ -6,25 +6,27 @@ import FetchErrorCard from "../components/FetchError";
 import EmptyResponse from "../components/EmptyResponse";
 import api from "../services/api";
 
+import type { TutorRequest } from "..";
+
 const TutorRequests = () => {
       const [isOpen, setIsOpen] = useState(false);
-      const [currentRequest, setCurrentRequest] = useState({
+      const [currentRequest, setCurrentRequest] = useState<TutorRequest>({
         _id: "",
         subject: "",
         level: "",
         email: "",
         message: "",
-        isReplied: "",    
+        isReplied: false,
         createdAt: ""    
       })
 
-      let page = 1;
-      let number = 10;
+      const page = 1;
+      const number = 10;
 
     const { data = [], error, isLoading, isFetching } =  useQuery({
-        queryKey: ["tutorRequests"],
-        queryFn: async (page: Number, number: Number) => {
-            const response = await api.get("/tutor-support/tutor-requests", {
+        queryKey: ["tutorRequests", page, number],
+        queryFn: async () => {
+            const response = await api.get<{ data: TutorRequest[] }>("/tutor-support/tutor-requests", {
               params: {
                 page,
                 number
@@ -34,7 +36,7 @@ const TutorRequests = () => {
         }
     })  
     
-    const handleEmailTabOpen = (request) => {
+    const handleEmailTabOpen = (request: TutorRequest) => {
       setCurrentRequest({
           _id: request._id,
           subject: request.subject,

@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { type InternalAxiosRequestConfig } from 'axios';
 
 const api = axios.create({
     baseURL: `${import.meta.env.VITE_API_URL}`,
@@ -6,9 +6,14 @@ const api = axios.create({
 });
 
 let isRefreshing = false;
-let failedQueue = [];
+type RetryRequestConfig = InternalAxiosRequestConfig & { _retry?: boolean };
+type QueuedRequest = {
+    resolve: () => void;
+    reject: (error: unknown) => void;
+};
+let failedQueue: QueuedRequest[] = [];
 
-const processQueue = (error) => {
+const processQueue = (error: unknown) => {
     failedQueue.forEach(prom => {
         if (error) {
             prom.reject(error);
@@ -22,7 +27,10 @@ const processQueue = (error) => {
 api.interceptors.response.use(
     (response) => response,
     async (error) => {
-        const originalRequest = error.config;
+        if (!axios.isAxiosError(error) || !error.config) {
+            return Promise.reject(error);
+        }
+        const originalRequest: RetryRequestConfig = error.config;
 
         // 👇 FIX: don't let the refresh endpoint trigger another refresh
         if (originalRequest?.url?.includes('/auth/refresh-token')) {
@@ -34,7 +42,7 @@ api.interceptors.response.use(
 
             // If we are already refreshing, queue this request
             if (isRefreshing) {
-                return new Promise((resolve, reject) => {
+                return new Promise<void>((resolve, reject) => {
                     failedQueue.push({ resolve, reject });
                 })
                 .then(() => api(originalRequest))

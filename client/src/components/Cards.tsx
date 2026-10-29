@@ -1,8 +1,11 @@
 import { ChevronLeft, ChevronRight, Clock, Mail, ShieldAlert, ShieldCheck, UserIcon } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
+import type { ReactNode } from "react";
+import type { User } from "..";
 import { roleStyles } from "../constants";
 import { cn } from "../utils/utils";
 
-export const RoleBadge = ({ role }) => (
+export const RoleBadge = ({ role }: { role: User["role"] }) => (
   <span
     className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium capitalize ${
       roleStyles[role] || "bg-gray-100 text-gray-600"
@@ -14,7 +17,7 @@ export const RoleBadge = ({ role }) => (
 );
 
 // ---------- Stat card  ----------
-export const StatCard = ({ icon: Icon, title, value, bgLight, textColor }) => (
+export const StatCard = ({ icon: Icon, title, value, bgLight, textColor }: { icon: LucideIcon; title: string; value: ReactNode; bgLight: string; textColor: string }) => (
   <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
     <div className="flex items-center justify-between">
       <div className={`${bgLight} p-3 rounded-lg`}>
@@ -31,7 +34,7 @@ export const StatCard = ({ icon: Icon, title, value, bgLight, textColor }) => (
 );
 
 // ---------- Filter pill ----------
-export const FilterPill = ({ active, onClick, children }) => (
+export const FilterPill = ({ active, onClick, children }: { active: boolean; onClick: () => void; children: ReactNode }) => (
   <button
     onClick={onClick}
     className={cn("rounded-full px-3.5 py-1.5 text-sm font-medium transition",
@@ -44,7 +47,7 @@ export const FilterPill = ({ active, onClick, children }) => (
 );
 
 // ---------- User card ----------
-export const UserCard = ({ user }) => (
+export const UserCard = ({ user }: { user: User }) => (
   <div className="bg-white rounded-xl shadow-sm hover:shadow-md p-5 border border-gray-100 transition-all duration-300">
     <div className="flex items-start justify-between gap-3">
       <div className="flex items-center gap-3">
@@ -90,13 +93,13 @@ export const UserCard = ({ user }) => (
 );
 
 // ---------- Pagination ----------
-export const Pagination = ({ page, pages, onPageChange }) => {
+export const Pagination = ({ page, pages, onPageChange }: { page: number; pages: number; onPageChange: (page: number) => void }) => {
   if (pages <= 1) return null;
 
   const getPageNumbers = () => {
     const delta = 1;
     const range = [];
-    const rangeWithDots = [];
+    const rangeWithDots: (number | "...")[] = [];
     let l;
 
     for (let i = 1; i <= pages; i++) {
@@ -105,7 +108,7 @@ export const Pagination = ({ page, pages, onPageChange }) => {
       }
     }
 
-    for (let i of range) {
+    for (const i of range) {
       if (l) {
         if (i - l === 2) rangeWithDots.push(l + 1);
         else if (i - l !== 1) rangeWithDots.push("...");

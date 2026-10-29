@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion'
+import { motion } from 'motion/react'
 import Header from '../components/Header'
 import MainLayout from '../Layout/MainLayout'
 import { aLevelSubjects, containerVariants, headerVariants, itemVariants, oLevelSubjects } from '../utils/utils'
@@ -15,7 +15,7 @@ const Home = () => {
         <Header />
         <div
           className='text-center flex flex-col gap-10 items-center py-10 text-slate-950
-                        bg-[url("./images/nymd-bg1.jpeg")] bg-cover bg-center bg-no-repeat relative'    
+                        bg-[url("/images/nymd-bg1.jpeg")] bg-cover bg-center bg-no-repeat relative'
         >
           <div className="w-full max-w-2xl m-2 p-5 rounded-2xl
                           bg-white/70 backdrop-blur-md
@@ -55,7 +55,7 @@ const Home = () => {
         {/* Resources */}
         <div 
           className='text-center flex flex-col gap-10 items-center py-10 text-slate-950
-                        bg-[url("./images/nymd-bg.jpeg")] bg-cover bg-center bg-no-repeat relative'
+                        bg-[url("/images/nymd-bg.jpeg")] bg-cover bg-center bg-no-repeat relative'
         >
 
           <div className="w-full max-w-2xl m-2 p-5 rounded-2xl

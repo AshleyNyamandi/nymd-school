@@ -8,7 +8,7 @@ import { Helmet } from 'react-helmet-async';
 const PastPapers = () => {  
   
   const location = useLocation();
-  const {subject, level} = useParams()
+  const {subject = "", level} = useParams()
   
   return (
     <>
